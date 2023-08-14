@@ -33,6 +33,7 @@ module tars
         0 optional string id;
         1 optional string image;
         2 optional string registryId;
+        3 optional string sha;
     };
 
     struct DockerRegistry
@@ -45,11 +46,27 @@ module tars
         5 optional vector<BaseImageInfo> baseImages;
     };
 
+    struct FrameworkKey
+    {
+        0 optional string cuid;
+        1 optional string priKey;
+    };
+
     /**
      * registry接口
      */
     interface Registry
     {
+        /**
+         * 长连接模式下, tarsnode上报自身
+         *
+         * @param ni   node详细信息
+         * @param li    node机器负载信息
+         *
+         * @return 注册是否成功
+         */
+        int reportNode(ReportNode rn);
+
         /**
          * node启动的时候往registry注册一个session
          *
@@ -149,6 +166,15 @@ module tars
          */
         int getDockerRegistry(out vector<DockerRegistry> doctorRegistries);
 
+        /**
+         * 拉取基础镜像
+         */
+        int dockerPull(string baseImageId);
+
+        /**
+         * 获取框架在市场上的key
+         */
+        int getFrameworkKey(out FrameworkKey fKey);
     };
 
 };
